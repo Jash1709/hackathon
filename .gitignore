@@ -1,0 +1,38 @@
+# Maven build
+/target/
+
+# Logs and reports
+/logs/
+/test-output/
+*.log
+
+# Local artifacts
+*.xlsx
+*.csv
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea/
+*.iml
+/out/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Extent reports or custom outputs
+/.extentreports/
+
+# Node/npm (if any submodules)
+node_modules/
+
+# Temporary files
+*.tmp
+*.swp 
