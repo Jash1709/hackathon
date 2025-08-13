@@ -1,6 +1,7 @@
 package com.policybazaar.main;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import com.policybazaar.pages.TravelInsuranceHomePage;
 import com.policybazaar.pages.TravelInsuranceResultsPage;
+import com.policybazaar.pages.HealthInsurancePage;
+import com.policybazaar.utils.ExcelUtil;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Main {
@@ -59,36 +62,45 @@ public class Main {
             driver.get(url);
             logger.info("Successfully navigated to PolicyBazaar page");
             
-            
-            // Run the form automation
-            logger.info("Initializing TravelInsuranceHomePage");
-            
-            
-            TravelInsuranceHomePage hp = new TravelInsuranceHomePage(driver);
-            
-            logger.info("=== STARTING FORM AUTOMATION PROCESS ===");
-            
-            hp.fillFormWithYes();
+            // Read desired heading(s) from Excel input and print those menu items
+            String inFile = "menu_headings.xlsx"; // Provide this file with a sheet and a header 'Name'
+            String inSheet = "Sheet1";
+            List<String> headings = ExcelUtil.readFirstColumn(inFile, inSheet);
+            if (headings.isEmpty()) {
+                logger.warn("No headings found in Excel. Defaulting to 'Health Insurance'");
+                headings.add("Health Insurance");
+            }
 
+            HealthInsurancePage page = new HealthInsurancePage(driver);
+            for (String heading : headings) {
+                logger.info("=== " + heading + " Menu Items ===");
+                for (String item : page.getMenuItemsByHeading(heading)) {
+                    System.out.println(item);
+                }
+            }
+
+            // Optionally export Health Insurance to Excel (kept from earlier)
+            String outFile = "health_insurance_items.xlsx";
+            String sheet = "Health Insurance";
+            page.exportHealthInsuranceMenuItemsToExcel(outFile, sheet);
+            logger.info("Exported Health Insurance items to Excel: {} (Sheet: {})", outFile, sheet);
             
-            logger.info("=== FORM AUTOMATION COMPLETED SUCCESSFULLY ===");
-            
-            // Handle the results page
-            logger.info("=== STARTING RESULTS PAGE PROCESSING ===");
-            logger.info("Initializing TravelInsuranceResultsPage");
-            TravelInsuranceResultsPage resultsPage = new TravelInsuranceResultsPage(driver);
-            
-            logger.info("Waiting for results page to load");
-            resultsPage.waitForResultsToLoad();
-            
-            logger.info("Sorting results by price: Low to High");
-            resultsPage.sortLowtoHigh();
-            
-            logger.info("Extracting first 3 insurance plans");
-            resultsPage.extractFirst3Plans();
-            
-            logger.info("=== RESULTS PAGE PROCESSING COMPLETED ===");
-            logger.info("=== AUTOMATION COMPLETED SUCCESSFULLY ===");
+            // logger.info("Initializing TravelInsuranceHomePage");
+            // TravelInsuranceHomePage hp = new TravelInsuranceHomePage(driver);
+            // logger.info("=== STARTING FORM AUTOMATION PROCESS ===");
+            // hp.fillFormWithYes();
+            // logger.info("=== FORM AUTOMATION COMPLETED SUCCESSFULLY ===");
+            // logger.info("=== STARTING RESULTS PAGE PROCESSING ===");
+            // logger.info("Initializing TravelInsuranceResultsPage");
+            // TravelInsuranceResultsPage resultsPage = new TravelInsuranceResultsPage(driver);
+            // logger.info("Waiting for results page to load");
+            // resultsPage.waitForResultsToLoad();
+            // logger.info("Sorting results by price: Low to High");
+            // resultsPage.sortLowtoHigh();
+            // logger.info("Extracting first 3 insurance plans");
+            // resultsPage.extractFirst3Plans();
+            // logger.info("=== RESULTS PAGE PROCESSING COMPLETED ===");
+            // logger.info("=== AUTOMATION COMPLETED SUCCESSFULLY ===");
             
         } catch (Exception e) {
             logger.error("Fatal error during automation execution", e);

@@ -3,7 +3,8 @@
 <suite name="PolicyBazaar Suite" thread-count="1">
   <test name="All Tests Sequential">
     <classes>
-      <class name="com.policybazaar.tests.TravelInsuranceTest"/>
+      <!-- <class name="com.policybazaar.tests.TravelInsuranceTest"/> -->
+      <class name="com.policybazaar.tests.HealthInsuranceTest"/>
     </classes>
   </test>
 </suite> 

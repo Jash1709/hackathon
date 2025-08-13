@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 
@@ -15,7 +16,7 @@ public class ConfigReader {
 	 private static Properties properties;
 	
 	 // Path to the config file
-	 private static final String CONFIG_FILE_PATH = "C:/Users/2421191/OneDrive - Cognizant/Desktop/hackathon/policybazaar/src/main/resources/config.properties";
+	 private static final String CONFIG_FILE_PATH = "src/main/resources/config.properties";
 	
 	 // Static block to load properties when class is loaded
 	 static {
@@ -26,10 +27,21 @@ public class ConfigReader {
 	 private static void loadProperties() {
 	     try {
 	         properties = new Properties();
+	
+	         // Try loading from classpath first
+	         InputStream classpathStream = ConfigReader.class.getClassLoader().getResourceAsStream("config.properties");
+	         if (classpathStream != null) {
+	             properties.load(classpathStream);
+	             classpathStream.close();
+	             logger.info("Configuration properties loaded from classpath");
+	             return;
+	         }
+	
+	         // Fallback to relative file path (useful in IDE runs)
 	         FileInputStream fileInputStream = new FileInputStream(CONFIG_FILE_PATH);
 	         properties.load(fileInputStream);
 	         fileInputStream.close();
-	         logger.info("Configuration properties loaded successfully");
+	         logger.info("Configuration properties loaded from {}", CONFIG_FILE_PATH);
 	     } catch (IOException e) {
 	         logger.error("Failed to load configuration properties: {}", e.getMessage());
 	         throw new RuntimeException("Configuration file not found", e);
