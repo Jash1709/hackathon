@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.policybazaar.utils.ExcelUtil;
+import com.policybazaar.utils.ConfigReader;
 
 public class TravelInsuranceResultsPage {
     
@@ -40,20 +42,19 @@ public class TravelInsuranceResultsPage {
     
     public void waitForResultsToLoad() {
         logger.info("Waiting for results to load");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getExplicitWait()));
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@class,'plan')]")));
         logger.info("Results loaded successfully");
         System.out.println("✓ Results loaded");
     }
     
     public void sortLowtoHigh() {
-        logger.info("Starting sort operation - Low to High");
         try {
-            logger.info("Clicking sort button");
+            
             clickSortBtn.click();
             logger.info("Sort button clicked successfully");
             
-            logger.info("Clicking sort option");
+            
             sort.click();
             logger.info("Sort option selected successfully - Low to High");
         } catch (Exception e) {
@@ -62,15 +63,14 @@ public class TravelInsuranceResultsPage {
         }
     }
     
-    public void extractFirst3Plans() {
-        logger.info("Starting extraction of first 3 insurance plans");
+    public LinkedHashMap<String, String> extractFirst3Plans() {
         
         try {
-            logger.info("Finding insurance provider elements");
+            
             List<WebElement> insuranceProvider = driver.findElements(By.className("quotesCard--insurerName"));
             logger.info("Found {} insurance provider elements", insuranceProvider.size());
             
-            logger.info("Finding insurance price elements");
+            
             List<WebElement> insurancePrice = driver.findElements(By.className("premiumPlanPrice"));
             logger.info("Found {} insurance price elements", insurancePrice.size());
             
@@ -101,6 +101,8 @@ public class TravelInsuranceResultsPage {
             logger.info("Initiating Excel write operation");
             ExcelUtil.writeToExcel(planMap, "travel_insurance_plans.xlsx", "Top 3 Plans");
             logger.info("Plan extraction and Excel write operation completed successfully");
+
+            return planMap;
             
         } catch (Exception e) {
             logger.error("Error during plan extraction process", e);

@@ -8,14 +8,15 @@ import org.apache.logging.log4j.Logger;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
 
 public class ExcelUtil {
     
     private static final Logger logger = LogManager.getLogger(ExcelUtil.class);
 
-    public static void writeToExcel(HashMap<String, String> mapData, String fileName, String sheetName) {
+    public static void writeToExcel(LinkedHashMap<String, String> mapData, String fileName, String sheetName) {
         logger.info("Starting Excel write operation");
-        logger.info("Parameters - fileName: {}, sheetName: {}, dataSize: {}", fileName, sheetName, mapData.size());
         
         try {
             logger.info("Creating new Excel workbook");
@@ -38,26 +39,21 @@ public class ExcelUtil {
                 Row dataRow = sheet.createRow(rowIndex);
                 dataRow.createCell(0).setCellValue(providerName);
                 dataRow.createCell(1).setCellValue(mapData.get(providerName));
-                logger.debug("Written row {}: {} - {}", rowIndex, providerName, mapData.get(providerName));
                 rowIndex++;
             }
             logger.info("Successfully written {} data rows", mapData.size());
             
             // Auto-size columns
-            logger.info("Auto-sizing columns");
             sheet.autoSizeColumn(0);
             sheet.autoSizeColumn(1);
-            logger.info("Columns auto-sized successfully");
             
             // Write to file
-            logger.info("Writing workbook to file: {}", fileName);
             FileOutputStream fos = new FileOutputStream(fileName);
             workbook.write(fos);
             fos.close();
             workbook.close();
             logger.info("File written and resources closed successfully");
             
-            System.out.println("✅ Data written to " + fileName + " -> " + sheetName);
             logger.info("Excel write operation completed successfully - File: {}, Sheet: {}", fileName, sheetName);
             
         } catch (IOException e) {

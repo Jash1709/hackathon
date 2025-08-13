@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+
 import com.policybazaar.pages.TravelInsuranceHomePage;
 import com.policybazaar.pages.TravelInsuranceResultsPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -43,55 +44,31 @@ public class Main {
             driver = new ChromeDriver(options);
             logger.info("Chrome WebDriver created successfully");
             
-            logger.info("Setting implicit wait timeout to 15 seconds");
+            
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
             
-            logger.info("Maximizing browser window");
+            
             driver.manage().window().maximize();
             
-            System.out.println("Chrome started successfully!");
+           
             logger.info("Browser setup completed successfully");
             
             // Navigate to the website
-            String url = "https://travel.policybazaar.com/?newpq=1&utm_term=newjourney&utm_content=newpq";
+            String url = "https://www.policybazaar.com/";
             logger.info("Navigating to URL: {}", url);
             driver.get(url);
-            logger.info("Successfully navigated to PolicyBazaar travel page");
-            System.out.println("Navigated to PolicyBazaar travel page");
+            logger.info("Successfully navigated to PolicyBazaar page");
+            
             
             // Run the form automation
             logger.info("Initializing TravelInsuranceHomePage");
+            
+            
             TravelInsuranceHomePage hp = new TravelInsuranceHomePage(driver);
             
             logger.info("=== STARTING FORM AUTOMATION PROCESS ===");
             
-            logger.info("Step 1: Selecting destination");
-            hp.selectDestinationWithJS();
-            logger.info("Destination selection completed successfully");
-            
-            logger.info("Step 2: Selecting travel dates");
-            hp.dateselect();
-            logger.info("Date selection completed successfully");
-            
-            
-            logger.info("Step 3: Selecting number of travellers");
-            hp.selectTravellerTwo();
-            logger.info("Traveller count selection completed successfully");
-
-            
-            logger.info("Step 4: Selecting traveller details");
-            hp.selectTraveller();
-            logger.info("Traveller details selection completed successfully");
-
-            
-            logger.info("Step 5: Selecting medical condition option");
-            hp.medicalContitionRadio();
-            logger.info("Medical condition selection completed successfully");
-
-            
-            logger.info("Step 6: Clicking Explore Plans button");
-            hp.explorePlanBtn();
-            logger.info("Explore Plans button clicked successfully");
+            hp.fillFormWithYes();
 
             
             logger.info("=== FORM AUTOMATION COMPLETED SUCCESSFULLY ===");

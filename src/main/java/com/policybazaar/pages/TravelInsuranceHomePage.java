@@ -10,8 +10,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.policybazaar.utils.ConfigReader;
 
 
 public class TravelInsuranceHomePage {
@@ -20,6 +23,10 @@ public class TravelInsuranceHomePage {
 	private WebDriver driver;
     
     // Locators
+	
+	@FindBy(xpath="/html/body/main/div[2]/section/div[7]")
+    WebElement travelInsuranceLink;
+	
     @FindBy(xpath="//*[@id='favourite-country']/li[3]")
     WebElement destination;
     
@@ -36,7 +43,6 @@ public class TravelInsuranceHomePage {
     WebElement continueDate;
     
     @FindBy(xpath = "//label[@for='traveller_2']")
-    @CacheLookup
     WebElement numberOfTraveller;
     
     @FindBy(xpath="//*[@id='0']")
@@ -52,9 +58,21 @@ public class TravelInsuranceHomePage {
     WebElement traveller2age;
     
     @FindBy(id="ped_no")
-    WebElement medicalContitionRadio;
+    WebElement medicalContitionRadioNo;
     
-    @FindBy(xpath="//*[@id=\"modal-root\"]/section/article/div/div/div[2]/div[3]/div/button")
+    @FindBy(id="ped_yes")
+    WebElement medicalContitionRadioYes;
+    
+    @FindBy(id="ped_yes_traveller_0")
+    WebElement medicalContitionRadioYesTraveller1;
+    
+    @FindBy(id="ped_yes_traveller_1")
+    WebElement medicalContitionRadioYesTraveller2;
+    
+ 
+    
+    
+    @FindBy(xpath="//button[text()='Done']")
     WebElement travellerDoneBtn;
     
     @FindBy(xpath = "//*[text()='Explore Plans ›']")
@@ -66,16 +84,22 @@ public class TravelInsuranceHomePage {
         logger.info("TravelInsuranceHomePage initialized with PageFactory");
     }
     
+    public void clickTravelInsurance() {
+        logger.info("Clicking Travel Insurance link from HomePage");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getExplicitWait()));
+        wait.until(ExpectedConditions.elementToBeClickable(travelInsuranceLink));
+        travelInsuranceLink.click();
+        logger.info("Clicked Travel Insurance link");
+    }
+    
     public void selectDestinationWithJS() {
-        logger.info("Starting destination selection process");
+       
         try {
-            logger.info("Scrolling destination element into view");
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].scrollIntoView(true);", destination);
             logger.info("Destination element scrolled into view successfully");
-            
-            logger.info("Clicking destination element");
-            destination.click();
+            WebDriverWait wait= new WebDriverWait(driver, Duration.ofSeconds(com.policybazaar.utils.ConfigReader.getExplicitWait()));
+            wait.until(ExpectedConditions.elementToBeClickable(destination)).click();
             logger.info("Destination selection completed successfully");
         } catch (Exception e) {
             logger.error("Error during destination selection", e);
@@ -83,24 +107,24 @@ public class TravelInsuranceHomePage {
         }
     }
     
-    public void dateselect() {
-        logger.info("Starting date selection process");
+    public void selectDate() {
+        
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             
-            logger.info("Clicking date picker");
+            
             js.executeScript("arguments[0].click();", date);
             logger.info("Date picker opened successfully");
             
-            logger.info("Selecting start date");
+            
             js.executeScript("arguments[0].click();", startDate);
             logger.info("Start date selected successfully");
             
-            logger.info("Selecting end date");
+            
             js.executeScript("arguments[0].click();", endDate);
             logger.info("End date selected successfully");
             
-            logger.info("Clicking continue button for dates");
+            
             continueDate.click();
             logger.info("Date selection process completed successfully");
         } catch (Exception e) {
@@ -110,20 +134,17 @@ public class TravelInsuranceHomePage {
     }
     
     public void selectTravellerTwo() {
-        logger.info("Starting traveller count selection process");
+      
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-            logger.info("Waiting for traveller count element to be visible");
             wait.until(ExpectedConditions.visibilityOf(numberOfTraveller));
             wait.until(ExpectedConditions.elementToBeClickable(numberOfTraveller));
             logger.info("Traveller count element is now visible and clickable");
 
-            logger.info("Scrolling traveller count element into view");
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", numberOfTraveller);
 
             try {
-                logger.info("Attempting native click on traveller count");
                 numberOfTraveller.click();
                 logger.info("Native click successful");
             } catch (org.openqa.selenium.ElementClickInterceptedException e) {
@@ -139,31 +160,25 @@ public class TravelInsuranceHomePage {
     }
 
     public void selectTraveller() {
-        logger.info("Starting individual traveller details selection");
+       
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             
-            logger.info("Selecting first traveller");
-            logger.info("Scrolling first traveller option into view");
+            
             js.executeScript("arguments[0].scrollIntoView(true);", traveller1option);
             
-            logger.info("Clicking first traveller option");
+            
             traveller1option.click();
             logger.info("First traveller selected successfully");
             
-            logger.info("Selecting age for first traveller (21 years)");
             js.executeScript("arguments[0].click();", traveller1age);
             logger.info("First traveller age selected successfully");
             
-            logger.info("Selecting second traveller");
-            logger.info("Scrolling second traveller option into view");
             js.executeScript("arguments[0].scrollIntoView(true);", traveller2option);
             
-            logger.info("Clicking second traveller option");
             traveller2option.click();
             logger.info("Second traveller selected successfully");
             
-            logger.info("Selecting age for second traveller (22 years)");
             js.executeScript("arguments[0].click();", traveller2age);
             logger.info("Second traveller age selected successfully");
             
@@ -174,15 +189,24 @@ public class TravelInsuranceHomePage {
         }
     }
     
-    public void medicalContitionRadio() {
+    public void medicalContitionRadioNo() {
         logger.info("Starting medical condition selection process");
         try {
-            logger.info("Clicking medical condition radio button (No)");
-            medicalContitionRadio.click();
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(com.policybazaar.utils.ConfigReader.getExplicitWait()));
+            wait.until(ExpectedConditions.elementToBeClickable(medicalContitionRadioNo));
+            medicalContitionRadioNo.click();
             logger.info("Medical condition radio button selected successfully");
             
-            logger.info("Clicking traveller done button");
-            travellerDoneBtn.click();
+            // Ensure Done button is clickable; handle overlays by scrolling and JS fallback
+            wait.until(ExpectedConditions.visibilityOf(travellerDoneBtn));
+            wait.until(ExpectedConditions.elementToBeClickable(travellerDoneBtn));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", travellerDoneBtn);
+            try {
+                travellerDoneBtn.click();
+            } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+                logger.warn("Done button click intercepted, using JS click");
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", travellerDoneBtn);
+            }
             logger.info("Traveller done button clicked successfully");
             
             logger.info("Medical condition selection process completed successfully");
@@ -192,17 +216,55 @@ public class TravelInsuranceHomePage {
         }
     }
     
-    public void explorePlanBtn() {
+    public void medicalContitionRadioYes() {
+        logger.info("Starting medical condition selection process");
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(com.policybazaar.utils.ConfigReader.getExplicitWait()));
+            wait.until(ExpectedConditions.elementToBeClickable(medicalContitionRadioYes));
+            medicalContitionRadioYes.click();
+            logger.info("Medical condition radio button selected successfully");
+            
+            // Ensure Done button is clickable; handle overlays by scrolling and JS fallback
+            wait.until(ExpectedConditions.visibilityOf(travellerDoneBtn));
+            wait.until(ExpectedConditions.elementToBeClickable(travellerDoneBtn));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", travellerDoneBtn);
+            try {
+                travellerDoneBtn.click();
+            } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+                logger.warn("Done button click intercepted, using JS click");
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", travellerDoneBtn);
+            }
+            logger.info("Traveller done button clicked successfully");
+            
+            logger.info("Medical condition selection process completed successfully");
+        } catch (Exception e) {
+            logger.error("Error during medical condition selection", e);
+            throw e;
+        }
+    }
+    
+    public void medicalOptionSelectWithYes(){
+    	medicalContitionRadioYesTraveller1.click();
+    	//medicalContitionRadioYesTraveller2.click();
+    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+    	wait.until(ExpectedConditions.elementToBeClickable(travellerDoneBtn));
+    	travellerDoneBtn.click();
+        logger.info("Traveller done button clicked successfully");
+        
+        logger.info("Medical condition selection process completed successfully");
+    	
+    }
+    
+    
+    public void explorePlanBtnWithNo() {
         logger.info("Starting explore plans button click process");
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(com.policybazaar.utils.ConfigReader.getExplicitWait()));
             
-            logger.info("Waiting for explore plans button to be visible and clickable");
             wait.until(ExpectedConditions.visibilityOf(explorePlanBtn));
             wait.until(ExpectedConditions.elementToBeClickable(explorePlanBtn));
             logger.info("Explore plans button is now visible and clickable");
 
-            logger.info("Scrolling explore plans button into view");
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", explorePlanBtn);
             
             String resultsUrl = "https://travel.policybazaar.com/quotes?encp=dU1MS2g3Q05zNXFqd20wYnFHUWNxZz09&family=0&isPlanCTAExp=1&isRepeatMember=0&newpq=1&profiletypeid=1&sum_insured=d60&token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTQ4OTM1ODUsImp0aSI6ImEyMGI3NTYyLWE0ZjItNDVmMy04MGVjLTlkM2ZmNTNjMzZlYyIsIlByb3Bvc2VySUQiOiI0ODQ2NTc1IiwibmJmIjoxNzU0ODkzNTg1LCJleHAiOjE3NTc1MjE1ODUsImlzcyI6InRyYXZlbC5wb2xpY3liYXphYXIuY29tIiwiYXVkIjoidHJhdmVsIn0.TFRxPLBl0BjVQ9mh2tAvTIyzvTKfAfZiTmtSONL2DPrH1__37GRJnDCea_aodl_Da5kvnElMsxXaAWxP6UhftlSRUX2VDOThRUSvwZCvRHTgQfI3BVrwVz46JGIyJcno6F9MAuAxKvXUyS5SQK2JMXXo9vVMJB8w6EswbSRgxZs7IXTRL4BaJ_iga9K4CJJt_eLzS7a5Owh1ggOzbM3snzYmQ6dKFjIwXptGsgWH0ovr4W7mejeroV2dEffW18AaT-xq_ptiJq0fHUq8cQruYjqHPGno503K3znoHlxqp0CqJg6EtFA8eACIIUKZotAodEIe-rtzBUdEcPRj2mZIVA&utm_content=newpq&utm_term=newjourney&visa_type=d32";
@@ -215,6 +277,53 @@ public class TravelInsuranceHomePage {
             logger.error("Error during explore plans button click", e);
             throw e;
         }
+    }
+    
+    public void explorePlanBtnWithYes() {
+        logger.info("Starting explore plans button click process");
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(com.policybazaar.utils.ConfigReader.getExplicitWait()));
+            
+            wait.until(ExpectedConditions.visibilityOf(explorePlanBtn));
+            wait.until(ExpectedConditions.elementToBeClickable(explorePlanBtn));
+            logger.info("Explore plans button is now visible and clickable");
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", explorePlanBtn);
+            
+            String resultsUrl = "https://travel.policybazaar.com/quotes?coverage_type=d40&encp=eFNpQ281NGd3UHJFdWR1WklnN2hVZz09&family=0&isPEDFeatureExp=1&isPlanCTAExp=1&isRepeatMember=0&newpq=1&profiletypeid=1&sort=Premium%20low%20to%20high&sum_insured=d60&token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTQ5OTk0MjksImp0aSI6IjA5YzliNjFiLTFiMGUtNDgxMy04MjdmLWEyMTI0ODk2YjJlYiIsIlByb3Bvc2VySUQiOiI0ODUyNTk0IiwibmJmIjoxNzU0OTk5NDI5LCJleHAiOjE3NTc2Mjc0MjksImlzcyI6InRyYXZlbC5wb2xpY3liYXphYXIuY29tIiwiYXVkIjoidHJhdmVsIn0.Ynu59RgwzNexdvMbea0WV9DhZVXQ_ba8I3O3TeAt2o1PGxLYqaxpBJvBytWVu4sxWK1gx34Di8bUPK96QdyFBKe6WaaJjtXwcrvpJQM2O_eySfuzS72-g45qFiE5SYjS-82LVIQwjO7Iw7u_AFjUAqXtZvY78kS2VLB9EJwSMWUmrFw0oc8TejAPIoUgkkJU5ISIal3w4Mzq3HX1IIxCSCQuKnVLlbxa20nQDLEOrF-AqSkn8TE0ppbQBoySk7rYTf9uhcsXMwNrnv1DUZpKsjNR9yW9lDdmhi98rcCwmXeUX8RrG71wya2GceFQa6jMH4gE0dTIZfP1-w8rtVEhdQ&utm_content=newpq&utm_term=newjourney&visa_type=d32";
+            
+            driver.navigate().to(resultsUrl);
+          
+            
+            logger.info("Explore plans process completed successfully");
+        } catch (Exception e) {
+            logger.error("Error during explore plans button click", e);
+            throw e;
+        }
+    }
+    
+    
+    public void fillFormWithNo() {
+	    	selectDestinationWithJS();
+	    	selectDate();
+	    	selectTravellerTwo();
+	    	selectTraveller();
+	    	medicalContitionRadioNo();
+	    	explorePlanBtnWithNo();
+	    	
+    	
+    }
+    
+    public void fillFormWithYes() {
+	    	selectDestinationWithJS();
+	    	selectDate();
+	    	selectTravellerTwo();
+	    	selectTraveller();
+	    	medicalContitionRadioYes();
+	    	medicalOptionSelectWithYes();
+	    	explorePlanBtnWithYes();
+    	
+    	
     }
 }
 
