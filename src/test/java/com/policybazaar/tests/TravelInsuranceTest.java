@@ -30,7 +30,7 @@ public class TravelInsuranceTest {
 
         // Use HomePage to click into Travel Insurance
         homePage = new TravelInsuranceHomePage(driver);
-        homePage.clickTravelInsurance();
+        
         resultsPage = new TravelInsuranceResultsPage(driver);
     }
 
@@ -44,7 +44,8 @@ public class TravelInsuranceTest {
 
     @Test(priority = 1, dependsOnMethods = "verifyBrowserOpenedAndLandingPageLoaded", groups = {"medical-no"})
     public void fillTravelDetails_ForTwoStudents_Europe() {
-        homePage.fillFormWithNo();
+    	homePage.clickTravelInsurance();
+    	homePage.fillFormWithNo();
     }
 
     @Test(priority = 2, dependsOnMethods = "fillTravelDetails_ForTwoStudents_Europe", groups = {"medical-no"})
@@ -70,7 +71,7 @@ public class TravelInsuranceTest {
         Assert.assertTrue(outFile.length() > 0, "Excel file appears to be empty: " + outFile.getAbsolutePath());
     }
 
-    @Test(priority = 5, groups = {"medical-yes"})
+    @Test(priority = 4, groups = {"medical-yes"})
     public void fillTravelDetails_WithMedicalConditionYes() {
         // Reopen home and navigate via HomePage each time
         DriverSetup.navigateToApplication();
@@ -80,7 +81,7 @@ public class TravelInsuranceTest {
         homePage.fillFormWithYes();
     }
 
-    @Test(priority = 6, dependsOnMethods = "fillTravelDetails_WithMedicalConditionYes", groups = {"medical-yes"})
+    @Test(priority = 5, dependsOnMethods = "fillTravelDetails_WithMedicalConditionYes", groups = {"medical-yes"})
     public void verifyNavigationToResultsPage_Yes() {
         resultsPage.waitForResultsToLoad();
         String resultsUrl = driver.getCurrentUrl();
@@ -89,7 +90,7 @@ public class TravelInsuranceTest {
         Assert.assertTrue(planCards.size() > 0, "No plan cards present on the results page");
     }
 
-    @Test(priority = 7, dependsOnMethods = "verifyNavigationToResultsPage_Yes", groups = {"medical-yes"})
+    @Test(priority = 6, dependsOnMethods = "verifyNavigationToResultsPage_Yes", groups = {"medical-yes"})
     public void verifyResults_SortLowToHigh_ExtractTop3AndWriteExcel_Yes() {
         resultsPage.waitForResultsToLoad();
 

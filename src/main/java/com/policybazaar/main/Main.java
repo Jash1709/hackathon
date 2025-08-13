@@ -8,9 +8,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-
 import com.policybazaar.pages.TravelInsuranceHomePage;
 import com.policybazaar.pages.TravelInsuranceResultsPage;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Main {
@@ -65,10 +65,9 @@ public class Main {
             
             
             TravelInsuranceHomePage hp = new TravelInsuranceHomePage(driver);
-            
             logger.info("=== STARTING FORM AUTOMATION PROCESS ===");
-            
-            hp.fillFormWithYes();
+            hp.clickTravelInsurance();
+            hp.fillFormWithNo();
 
             
             logger.info("=== FORM AUTOMATION COMPLETED SUCCESSFULLY ===");
@@ -94,13 +93,7 @@ public class Main {
             logger.error("Fatal error during automation execution", e);
             logger.error("Error details: {}", e.getMessage());
             
-        } finally {
-            if (driver != null) {
-                logger.info("Closing browser and cleaning up resources");
-                driver.quit();
-                logger.info("Browser closed and resources cleaned up successfully");
-                
-            }
+        } 
         }
     }
-}
+

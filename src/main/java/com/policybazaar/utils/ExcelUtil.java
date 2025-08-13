@@ -2,14 +2,19 @@ package com.policybazaar.utils;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.policybazaar.model.TravelInsuranceData;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.LinkedHashMap;
-import java.util.TreeMap;
+
 
 public class ExcelUtil {
     
@@ -65,5 +70,48 @@ public class ExcelUtil {
             System.out.println("❌ Unexpected error: " + e.getMessage());
         }
     }
-}
 
+    public static TravelInsuranceData readExcelData(String filePath, String sheetName) {
+        
+        String[] excelData = null;
+        TravelInsuranceData data = null;
+
+        logger.info("Reading data from Excel file.");
+
+        try {
+            // Open Excel file
+            FileInputStream file = new FileInputStream(filePath);
+            XSSFWorkbook workBook = new XSSFWorkbook(file);
+            XSSFSheet sheet = workBook.getSheet(sheetName);
+            XSSFRow row = sheet.getRow(0);
+
+            // Read all cells in the first row
+            int cellCount = row.getLastCellNum();
+            excelData = new String[cellCount];
+            DataFormatter formatter = new DataFormatter();
+
+            // Store formatted cell values in array
+            for (int i = 0; i < cellCount; i++) {
+                XSSFCell cell = row.getCell(i);
+                excelData[i] = (cell != null) ? formatter.formatCellValue(cell) : "";
+            }
+
+            // Close resources
+            workBook.close();
+            logger.info("Workbook closed");
+            file.close();
+            logger.info("File closed");
+
+            // Create RegistrationInfo object using read data
+            data = new TravelInsuranceData(
+                excelData[0], excelData[1], excelData[2],
+                Integer.parseInt(excelData[3]),  Integer.parseInt(excelData[4]),  Integer.parseInt(excelData[5]),Boolean.parseBoolean(excelData[6])
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return data;
+    }
+}

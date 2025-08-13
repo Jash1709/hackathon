@@ -28,8 +28,9 @@ public class TravelInsuranceResultsPage {
     @FindBy(xpath = "//div[contains(@class,'plan')]")
     List<WebElement> plans;
     
-    @FindBy(xpath="//*[@id='root']/div/div[2]/aside/section[1]")
+    @FindBy(xpath="//*[@id=\'root\']/div/div[2]/aside/section[1]/details/summary/p")
     WebElement clickSortBtn;
+  
     
     @FindBy(id="17_sort")
     WebElement sort;
