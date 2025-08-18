@@ -31,13 +31,13 @@ public class Main {
             // Minimal Chrome options
             logger.info("Configuring Chrome options");
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--disable-web-security");
-            options.addArguments("--allow-running-insecure-content");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--remote-allow-origins=*");
-            logger.info("Chrome options configured successfully");
-            
+         // options.addArguments("--headless=new"); // add later if needed
+         options.addArguments("--no-sandbox");
+         options.addArguments("--disable-dev-shm-usage");
+         // Remove: --disable-web-security, --allow-running-insecure-content
+         
+         	
+         	
             
             logger.info("Initializing Chrome WebDriver");
             
@@ -68,6 +68,8 @@ public class Main {
             logger.info("=== STARTING FORM AUTOMATION PROCESS ===");
             hp.clickTravelInsurance();
             hp.fillFormWithNo();
+            
+           
 
             
             logger.info("=== FORM AUTOMATION COMPLETED SUCCESSFULLY ===");

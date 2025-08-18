@@ -15,8 +15,7 @@ public class ConfigReader {
 	 private static Properties properties;
 	
 	 // Path to the config file
-	 private static final String CONFIG_FILE_PATH = "C:/Users/2421191/OneDrive - Cognizant/Desktop/hackathon/policybazaar/src/main/resources/config.properties";
-	
+	 private static final String CONFIG_FILE_PATH = "src/main/resources/config.properties";	
 	 // Static block to load properties when class is loaded
 	 static {
 	     loadProperties();

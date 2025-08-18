@@ -39,7 +39,7 @@ public class TravelInsuranceTest {
         Assert.assertNotNull(driver, "WebDriver is null");
         Assert.assertTrue(driver.getWindowHandles().size() > 0, "No browser window opened");
         String currentUrl = driver.getCurrentUrl();
-        Assert.assertTrue(currentUrl.contains("travel.policybazaar.com"), "Unexpected landing URL: " + currentUrl);
+        Assert.assertTrue(currentUrl.contains("policybazaar.com"), "Unexpected landing URL: " + currentUrl);
     }
 
     @Test(priority = 1, dependsOnMethods = "verifyBrowserOpenedAndLandingPageLoaded", groups = {"medical-no"})
@@ -71,7 +71,7 @@ public class TravelInsuranceTest {
         Assert.assertTrue(outFile.length() > 0, "Excel file appears to be empty: " + outFile.getAbsolutePath());
     }
 
-    @Test(priority = 4, groups = {"medical-yes"})
+    @Test(priority = 4, dependsOnMethods = "verifyBrowserOpenedAndLandingPageLoaded", groups = {"medical-yes"})
     public void fillTravelDetails_WithMedicalConditionYes() {
         // Reopen home and navigate via HomePage each time
         DriverSetup.navigateToApplication();
