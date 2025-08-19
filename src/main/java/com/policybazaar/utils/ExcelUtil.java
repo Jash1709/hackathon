@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.policybazaar.model.TravelInsuranceData;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,8 +25,26 @@ public class ExcelUtil {
         logger.info("Starting Excel write operation");
         
         try {
-            logger.info("Creating new Excel workbook");
-            Workbook workbook = new XSSFWorkbook();
+            Workbook workbook;
+            File file = new File(fileName);
+            
+            // Check if file exists - append sheet or create new workbook
+            if (file.exists()) {
+                logger.info("Excel file exists, opening existing workbook");
+                FileInputStream fis = new FileInputStream(file);
+                workbook = new XSSFWorkbook(fis);
+                fis.close();
+            } else {
+                logger.info("Creating new Excel workbook");
+                workbook = new XSSFWorkbook();
+            }
+            
+            // Check if sheet already exists, if so remove it
+            if (workbook.getSheet(sheetName) != null) {
+                logger.info("Sheet {} already exists, removing old version", sheetName);
+                int sheetIndex = workbook.getSheetIndex(sheetName);
+                workbook.removeSheetAt(sheetIndex);
+            }
             
             logger.info("Creating sheet: {}", sheetName);
             Sheet sheet = workbook.createSheet(sheetName);

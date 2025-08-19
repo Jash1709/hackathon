@@ -63,7 +63,7 @@ public class TravelInsuranceTest {
 
     	resultsPage.sortLowtoHigh();
 
-        LinkedHashMap<String, String> top3Plans = resultsPage.extractFirst3Plans();
+        LinkedHashMap<String, String> top3Plans = resultsPage.extractFirst3Plans(false); // Medical condition = No
         Assert.assertTrue(top3Plans.size() > 0, "No plans extracted");
 
         File outFile = new File("travel_insurance_plans.xlsx");
@@ -96,13 +96,28 @@ public class TravelInsuranceTest {
 
     	resultsPage.sortLowtoHigh();
 
-
-        LinkedHashMap<String, String> top3Plans = resultsPage.extractFirst3Plans();
+        LinkedHashMap<String, String> top3Plans = resultsPage.extractFirst3Plans(true); // Medical condition = Yes
         Assert.assertTrue(top3Plans.size() > 0, "No plans extracted");
 
         File outFile = new File("travel_insurance_plans.xlsx");
         Assert.assertTrue(outFile.exists(), "Expected Excel file not found: " + outFile.getAbsolutePath());
         Assert.assertTrue(outFile.length() > 0, "Excel file appears to be empty: " + outFile.getAbsolutePath());
+    }
+
+    @Test(priority = 7, groups = {"validation"})
+    public void testValidationError_IncompleteAgeSelection() {
+        // Navigate to fresh page for validation test
+        DriverSetup.navigateToApplication();
+        homePage = new TravelInsuranceHomePage(driver);
+        homePage.clickTravelInsurance();
+        
+        // Fill form with incomplete data (missing second traveller age)
+        homePage.fillFormWithValidation();
+        
+        // Check if validation error appears on page
+        String pageSource = driver.getPageSource();
+        Assert.assertTrue(pageSource.contains("Please") || pageSource.contains("required") || pageSource.contains("error"), 
+            "Validation error message should appear on page");
     }
 
     @AfterClass()

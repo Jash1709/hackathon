@@ -67,8 +67,8 @@ public class Main {
             TravelInsuranceHomePage hp = new TravelInsuranceHomePage(driver);
             logger.info("=== STARTING FORM AUTOMATION PROCESS ===");
             hp.clickTravelInsurance();
-            hp.fillFormWithNo();
-            
+            //hp.fillFormWithNo();
+            hp.fillFormWithValidation();
            
 
             

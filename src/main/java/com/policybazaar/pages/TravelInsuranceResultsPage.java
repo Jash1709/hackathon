@@ -65,6 +65,10 @@ public class TravelInsuranceResultsPage {
     }
     
     public LinkedHashMap<String, String> extractFirst3Plans() {
+        return extractFirst3Plans(false); // Default to false for backward compatibility
+    }
+    
+    public LinkedHashMap<String, String> extractFirst3Plans(boolean hasMedicalCondition) {
         
         try {
             
@@ -98,10 +102,11 @@ public class TravelInsuranceResultsPage {
             System.out.println("=== END ===");
             logger.info("Console display completed");
             
-            // Write to Excel
-            logger.info("Initiating Excel write operation");
-            ExcelUtil.writeToExcel(planMap, "travel_insurance_plans.xlsx", "Top 3 Plans");
-            logger.info("Plan extraction and Excel write operation completed successfully");
+            // Write to Excel with different sheet names based on medical condition
+            String sheetName = hasMedicalCondition ? "Plans With Medical" : "Plans Without Medical";
+            logger.info("Writing to Excel with sheet name: {}", sheetName);
+            ExcelUtil.writeToExcel(planMap, "travel_insurance_plans.xlsx", sheetName);
+            logger.info("Plan extraction and Excel write operation completed successfully for medical condition: {}", hasMedicalCondition);
 
             return planMap;
             
